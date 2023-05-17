@@ -25,18 +25,20 @@ async function validateEmail(email) {
           validEmail: isEmailValid && res,
         });
       }
-    }, { sender: 'youremail@example.com', timeout: 5000 });
+    // }, { sender: 'sherykha78687@gmail.com', timeout: 5000 });
+    },5000,'sherykhan78687@gmail.com');
   });
 }
 
 // Usage example
-const email = 'example@example.com';
-validateEmail(email)
-  .then((result) => {
-    console.log('Email syntax is valid:', result.validSyntax);
-    console.log('Domain is active:', result.validDomain);
-    console.log('Email is active:', result.validEmail);
-  })
-  .catch((err) => {
-    console.error('An error occurred:', err);
-  });
+// const email = 'example@example.com';
+// validateEmail(email)
+//   .then((result) => {
+//     console.log('Email syntax is valid:', result.validSyntax);
+//     console.log('Domain is active:', result.validDomain);
+//     console.log('Email is active:', result.validEmail);
+//   })
+//   .catch((err) => {
+//     console.error('An error occurred:', err);
+//   });
+module.exports={validateEmail}

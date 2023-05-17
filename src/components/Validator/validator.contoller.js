@@ -1,6 +1,7 @@
 const fs = require('fs');
 const httpStatus = require('http-status');
 const Checker=require("../../helpers/checker")
+const {validateEmail:validate}=require("./validation")
 
 
 class Validator{
@@ -21,6 +22,14 @@ class Validator{
       const email = line.split(',')[4].trim();
       console.log(email,"-------------------")
       if (Checker.validateEmail(email)) {
+        validate(email).then((result) => {
+    console.log('Email syntax is valid:', result.validSyntax);
+    console.log('Domain is active:', result.validDomain);
+    console.log('Email is active:', result.validEmail);
+  })
+  .catch((err) => {
+    console.error('An error occurred:', err);
+  });
         emails.push(email);
       }
     }
