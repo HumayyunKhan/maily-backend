@@ -1,9 +1,10 @@
 const express=require('express')
 const router=express.Router()
+const Validator=require("./validator.contoller")
 const {Upload:upload}=require("../../helpers/upload")
 router.post('/validateEmails',upload.single('file'),(req,res)=>{
-    console.log("hello")
-    res.send('WELCOME TO DASHBOARD')
+    Validator.readEmailsFromCSV(req,res)
+
 })   
 
 module.exports={router}

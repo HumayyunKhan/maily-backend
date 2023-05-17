@@ -1,32 +1,44 @@
 const fs = require('fs');
+const httpStatus = require('http-status');
+const Checker=require("../../helpers/checker")
 
 
 class Validator{
 
- readEmailsFromCSV(filePath) {
+ async readEmailsFromCSV(req,res) {
+  try{
+  const filePath=req.file.path
+  if(!filePath)return res.status(httpStatus.CONFLICT).send({success:false,message:"No file specified"})
   const fileData = fs.readFileSync(filePath, 'utf8');
+  console.log(fileData)
   const lines = fileData.split('\n');
 
   const emails = [];
 
-  for (let i = 0; i < lines.length; i++) {
+  for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (line !== '') {
-      const email = line.split(';')[0].trim();
-      if (validateEmail(email)) {
+      const email = line.split(',')[4].trim();
+      console.log(email,"-------------------")
+      if (Checker.validateEmail(email)) {
         emails.push(email);
       }
     }
   }
 
-  return emails;
+  return res.status(httpStatus.OK).send({success:true,message:"specified emails successfully validated",data:emails});
+}catch(ex){
+  console.log(ex)
+  return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({success:false,message:"An error occured on server side"})
 }
- validateEmail(email) {
-  // You can add your email validation logic here
-  // This is a basic email validation pattern
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailPattern.test(email);
 }
+//  validateEmail(email) {
+//   console.log(email,"---Email")
+//   // You can add your email validation logic here
+//   // This is a basic email validation pattern
+//   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   return emailPattern.test(email);
+// }
 
 // Usage example
 // const filePath = 'path/to/your/file.csv';
@@ -34,3 +46,4 @@ class Validator{
 // console.log(emails);
 
 }
+module.exports=new Validator()
