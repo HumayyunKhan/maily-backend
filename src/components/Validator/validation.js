@@ -1,5 +1,6 @@
 const validator = require('email-validator');
 const emailExistence = require('email-existence');
+const dns = require('dns');
 
 async function validateEmail(email) {
   const isEmailValid = validator.validate(email);
@@ -29,6 +30,36 @@ async function validateEmail(email) {
     },5000,'sherykhan78687@gmail.com');
   });
 }
+
+
+function isValidDomain(domain) {
+  return new Promise((resolve, reject) => {
+    dns.resolveMx(domain, (err, addresses) => {
+      if (err) {
+        // Error occurred during DNS lookup
+        reject(err);
+      } else {
+        // Check if MX records exist
+        resolve(addresses && addresses.length > 0);
+      }
+    });
+  });
+}
+
+// Usage example
+const domain = 'wego.com';
+
+isValidDomain(domain)
+  .then((isValid,err) => {
+    if (isValid) {
+      console.log(`${domain} is a valid domain.`);
+    } else {
+      console.log(`${domain} is not a valid domain.`);
+    }
+  })
+  .catch(error => {
+    console.error('An error occurred:', error);
+  });
 
 // Usage example
 // const email = 'example@example.com';
