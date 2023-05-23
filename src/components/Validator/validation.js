@@ -45,6 +45,10 @@ function isValidDomain(domain) {
     });
   });
 }
+function isSyntaxValid(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
 
 // Usage example
 const domain = 'wego.com';
@@ -56,6 +60,7 @@ isValidDomain(domain)
     } else {
       console.log(`${domain} is not a valid domain.`);
     }
+    console.log(err)
   })
   .catch(error => {
     console.error('An error occurred:', error);
@@ -72,4 +77,4 @@ isValidDomain(domain)
 //   .catch((err) => {
 //     console.error('An error occurred:', err);
 //   });
-module.exports={validateEmail}
+module.exports={validateEmail,isSyntaxValid}

@@ -1,7 +1,8 @@
 const fs = require('fs');
 const httpStatus = require('http-status');
 const Checker=require("../../helpers/checker")
-const {validateEmail:validate}=require("./validation")
+const {validateEmail:validate,isSyntaxValid}=require("./validation")
+
 
 
 class Validator{
@@ -41,18 +42,30 @@ class Validator{
   return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({success:false,message:"An error occured on server side"})
 }
 }
-//  validateEmail(email) {
-//   console.log(email,"---Email")
-//   // You can add your email validation logic here
-//   // This is a basic email validation pattern
-//   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//   return emailPattern.test(email);
-// }
 
-// Usage example
-// const filePath = 'path/to/your/file.csv';
-// const emails = readEmailsFromCSV(filePath);
-// console.log(emails);
+
+async validateSingleMail(req,res){
+  try{
+    const {email}=req.body
+    const result =Checker.validateEmail(email)
+    if(!result){
+      return res.status(httpStatus.OK).send({success:true,data:{email:email,isvalidDomain:false,isSyntaxValid:false,isEmailValid:false}})
+    }
+    validate(email).then((result) => {
+
+      console.log(email)
+      return res.send({success:true,data:{email:email,isvalidDomain:result.validDomain,isSyntaxValid:result.validSyntax,isEmailValid:result.validEmail}})
+    })
+
+
+
+
+
+
+  }catch(ex){
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({success:false,message:"An error occured on  server side"})
+  }
+}
 
 }
 module.exports=new Validator()
